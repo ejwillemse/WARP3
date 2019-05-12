@@ -14,6 +14,15 @@ In this presentation, network analysis is used to formally analyse the connectio
 
 ## Method
 
+The main database searched is 'Web of Science Core Collection'. To check the coverage of the database, the bibliographies of two published arc routing bibliographies, covering (2000-2009)[https://doi.org/10.1002/net.20347] and (2010-2017)[https://doi.org/10.1002/net.21762] were compared against records from the database found with a key word search `Arc Routing` in either the Title, Abstract, Keywords, Keywords Plus of publications, within the same time range of review articles. The following results were obtained:
+
+* `TOPIC: ("arc routing") Timespan: 2000-2009` returned 128 records compared against the 149 references of the review article (85% coverage).
+* `TOPIC: ("arc routing") Timespan: 2010-2017` returned 225 records compared against the 210 references of the review article (107% coverage).
+
+
+
+
+
 * Extract article's and their citations from https://www.webofknowledge.com/ using 'Capaciated Arc Routing Problem' and 'Arc Routing Problem' as keyword search terms.
 * Build a direct citation network using http://www.citnetexplorer.nl/publications (description [here](http://www.citnetexplorer.nl/publications)) or http://www.vosviewer.com (description [here](http://www.vosviewer.com/publications)).
 * Analyse the citation network.
