@@ -15,6 +15,6 @@ In this presentation, network analysis is used to formally analyse the connectio
 ## Method
 
 * Extract article's and their citations from https://www.webofknowledge.com/ using 'Capaciated Arc Routing Problem' and 'Arc Routing Problem' as keyword search terms.
-* Build a direct citation network using http://www.citnetexplorer.nl/publications or http://www.vosviewer.com
+* Build a direct citation network using http://www.citnetexplorer.nl/publications (description [here](http://www.citnetexplorer.nl/publications)) or http://www.vosviewer.com (description [here](http://www.vosviewer.com/publications)).
 * Analyse the citation network.
 * Construct auxilory networks by linking problem variants through their closeness, solution methods used and benchmark problems tested.
