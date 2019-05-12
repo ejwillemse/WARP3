@@ -1,0 +1,219 @@
+---
+title: "Web of science vs arc routing reviews"
+author: "Elias J. Willemse"
+date: "12/05/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(wordcloud)
+```
+
+## Introduction
+
+The main database searched is 'Web of Science Core Collection'. To check the coverage of the database, the bibliographies of two published arc routing bibliographies, covering [2000-2009](https://doi.org/10.1002/net.20347) and [2010-2017](https://doi.org/10.1002/net.21762) were compared against records from the database found with a key word search `Arc Routing` and then extended to include either `Postman Problem` OR `General Routing Problem` in either the Title, Abstract, Keywords, Keywords Plus of publications, within the same time range of review articles. The following results were obtained. Both the key-word search results for the time periods and the cited papers of the review articles were exported from web-of-science. The results exported and their format were:
+
+* 'Author', 'Title', 'Source'
+* 'Tab-delimited (Mac, UTF-8)'
+
+The following results were obtained via web-of-science database searches, compared against the number of articles cited in the coinciding review articles:
+
+* `TOPIC: ("arc routing") Timespan: 2000-2009` returned 128 records compared against the 150 references of the review article (85% coverage).
+* `TOPIC: ("arc routing") Timespan: 2010-2017` returned 225 records compared against the 210 references of the review article (107% coverage).
+
+The extended searches return:
+
+* 230 records compared against the 128 references of the review article (180% coverage).
+* 321 records compared against the 225 references of the review article (143% coverage).
+
+
+The retrieved citations from web-of-science are available from:
+
+```{r}
+# Review article citations:
+rev2000_2009 <- '../data/ar_review_2000_2009.txt'
+rev2010_2017 <- '../data/ar_review_2010_2017.txt' 
+  
+# Records found via 'arc routing' search for time-periods:
+search2000_2009 <- '../data/ar_search_ext_2000_2009.txt'
+search2010_2017 <- '../data/ar_search_ext_2010_2017.txt'
+```
+
+## Data transfomration:
+
+Before conducting the analysis, we first make the files compatible with each other by extracting the minimum required columns and renaming them:
+
+```{r}
+new_columns <- c("author", "title", "journal_book", 'year')
+
+r1 <- read.csv(rev2000_2009, stringsAsFactors = F, sep = '\t', fileEncoding="UTF-8", row.names=NULL)[,c(2, 10, 18, 35)]
+r2 <- read.csv(rev2010_2017, stringsAsFactors = F, sep = '\t', fileEncoding="UTF-8", row.names=NULL)[,c(2, 10, 18, 35)]
+s1 <- read.csv(search2000_2009, stringsAsFactors = F, sep = '\t', fileEncoding="UTF-8", row.names=NULL)[,c(2, 9, 10, 45)]
+s2 <- read.csv(search2010_2017, stringsAsFactors = F, sep = '\t', fileEncoding="UTF-8", row.names=NULL)[,c(2, 9, 10, 45)]
+
+names(r1) <- new_columns
+names(r2) <- new_columns
+names(s1) <- new_columns
+names(s2) <- new_columns 
+```
+
+## Web of Science review article coverage
+
+The following is the total records cited in the review articles AND indexed on web-of-science:
+
+```{r, echo=FALSE}
+r_indexed <- round(c(nrow(r1) / 150, nrow(r2) / 210), 2)
+print('Number and fraction articles indexed')
+print(c(nrow(r1), nrow(r2)))
+print(paste(r_indexed))
+
+print('Number and fraction of articles not indexed')
+print(c(150 - nrow(r1), 210 - nrow(r2)))
+print(paste(1 - r_indexed))
+```
+
+As per the above, quite a few records are not indexed on web-of-science and therefore not included in subsequent analysis. Excluded articles include PhD theses, conference proceedings, technical reports, a few books, pre-2000 articles, and non-indexed journals.
+
+## Review 1 compared to search 1
+
+Next, we analyse the number of articles included in both the review articles and web-of-science search, and excluded by either. First, we compare the first review article:
+
+```{r, echo=FALSE}
+r1_AND_s1 <- inner_join(r1, s1, by=c('title'))
+r1_NOT_s1 <- anti_join(r1, s1, by=c('title'))
+s1_NOT_r1 <- anti_join(s1, r1, by=c('title'))
+
+print(paste('Articles in both:', nrow(r1_AND_s1)))
+print(paste('Articles in review 1 AND NOT in search 1:', nrow(r1_NOT_s1)))
+print(paste('Articles in search 1 AND NOT in review 1:', nrow(s1_NOT_r1)))
+```
+
+We repeat the analysis, filtering out records from the review article published before the review period:
+
+```{r, echo=FALSE}
+r1_2000 <- r1 %>% filter(year >= 2000)
+r1_AND_s1 <- inner_join(r1_2000, s1, by=c('title'))
+r1_NOT_s1 <- anti_join(r1_2000, s1, by=c('title'))
+s1_NOT_r1 <- anti_join(s1, r1_2000, by=c('title'))
+
+print(paste('Articles in both:', nrow(r1_AND_s1)))
+print(paste('Articles in review 1 AND NOT in search 1:', nrow(r1_NOT_s1)))
+print(paste('Articles in search 1 AND NOT in review 1:', nrow(s1_NOT_r1)))
+```
+
+First we look at the title's of articles in the review but not in the search results:
+
+```{r, echo=FALSE}
+r1_NOT_s1$title
+```
+
+Articles included in the review but not the search mostly focus on problem variants that do not include any of the keywords in the titles of the articles; they seem to focus on other problems though they may be related to arc routing problems.
+
+Next we look at articles in the search results but not the review:
+
+```{r, echo=FALSE}
+ggplot(s1_NOT_r1, aes(x=year)) + geom_bar() + theme_bw()
+```
+
+```{r, echo=FALSE}
+wordcloud(filter(s1_NOT_r1, year < 2010)$title, min.freq=3)
+```
+
+```{r, echo=FALSE}
+wordcloud(filter(s1_NOT_r1, year < 2010)$journal_book, min.freq=3)
+```
+
+Articles included in the search but not the review include a number of articles published in 2010 directly after the review article; and quite a few articles in conference proceedings, IEEE and other non-traditional arc routing journals.
+
+## Review 2 compared to search 2
+
+And then the second review article:
+
+```{r, echo=FALSE}
+r2_AND_s2 <- inner_join(r2, s2, by=c('title'))
+r2_NOT_s2 <- anti_join(r2, s2, by=c('title'))
+s2_NOT_r2 <- anti_join(s2, r2, by=c('title'))
+
+print(paste('Articles in both:', nrow(r2_AND_s2)))
+print(paste('Articles in review 2 AND NOT in search 2:', nrow(r2_NOT_s2)))
+print(paste('Articles in search 2 AND NOT in review 2:', nrow(s2_NOT_r2)))
+```
+
+We repeat the analysis, filtering out records from the review article published before the review period:
+
+```{r, echo=FALSE}
+r2_2010 <- r2 %>% filter(year >= 2010)
+r2_AND_s2 <- inner_join(r2_2010, s2, by=c('title'))
+r2_NOT_s2 <- anti_join(r2_2010, s2, by=c('title'))
+s2_NOT_r2 <- anti_join(s2, r2_2010, by=c('title'))
+
+print(paste('Articles in both:', nrow(r2_AND_s2)))
+print(paste('Articles in review 2 AND NOT in search 2:', nrow(r2_NOT_s2)))
+print(paste('Articles in search 2 AND NOT in review 2:', nrow(s2_NOT_r2)))
+```
+
+First we look at the title's of articles in the review but not in the search results:
+
+```{r, echo=FALSE}
+r2_NOT_s2$title[order(r2_NOT_s2$title)]
+```
+
+Same as review 1, articles included in the review but not the search focus on problem variants that do not include any of the keywords in the titles of the articles, or they focus on specific arc routing applications, such as waste collection, meter reading, debris removal, etc.
+
+Next, we look at articles in the search but not the review:
+
+```{r, echo=FALSE}
+ggplot(s2_NOT_r2, aes(x=year)) + geom_bar() + theme_bw()
+```
+
+```{r, echo=FALSE}
+wordcloud(filter(s2_NOT_r2, year < 2017)$title, min.freq=2)
+```
+
+```{r, echo=FALSE}
+wordcloud(filter(s2_NOT_r2, year < 2017)$journal_book, min.freq=2)
+```
+
+Articles included in the search but not the review again include a number of articles published in 2017 directly after the review article; and quite a few articles in conference proceedings, and other non-traditional arc routing journals.
+
+## Combined review 1 and 2 compared to combined search 1 and 2
+
+Finally, we combined and compare the results of both the reviews and search results:
+
+```{r, echo=FALSE}
+r <- rbind(r1_2000, r2_2010)
+s <- rbind(s1, s2)
+
+r_AND_s <- inner_join(r, s, by=c('title'))
+r_NOT_s <- anti_join(r, s, by=c('title'))
+s_NOT_r <- anti_join(s, r, by=c('title'))
+
+print(paste('Articles in both:', nrow(r_AND_s)))
+print(paste('Articles in review AND NOT in search :', nrow(r_NOT_s)))
+print(paste('Articles in search AND NOT in review :', nrow(s_NOT_r)))
+```
+
+```{r, echo=FALSE}
+r_NOT_s$title[order(r_NOT_s$title)]
+```
+
+```{r, echo=FALSE}
+ggplot(s_NOT_r, aes(x=year)) + geom_bar() + theme_bw()
+```
+
+```{r, echo=FALSE}
+wordcloud(filter(s_NOT_r, year < 2017)$title, min.freq=4)
+```
+
+```{r, echo=FALSE}
+wordcloud(filter(s_NOT_r, year < 2017)$journal_book, min.freq=3)
+```
+
+## Conclusion
+
+The review articles focus more on journal articles, whereas the search results include conference proceedings and are therefore more comprehensive. A number of articles reviewed are not indexed on Web-of-Science. Overall, using web-of-science should give fairly comprehensive search results on arc routing problems and their variants up to the current point of time.

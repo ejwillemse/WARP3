@@ -1,0 +1,20 @@
+---
+title: "Web of science CARPs reviews"
+author: "Elias J. Willemse"
+date: "12/05/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(tidyverse)
+library(bibliometrix)
+library(wordcloud)
+```
+
+## Introduction
+
+In the document we analyse publications dealing with the Capacitated Arc Routing Problem, Capacitated General Routing Problem and their variants.

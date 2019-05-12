@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jnlp spec="1.0+" codebase="http://www.citnetexplorer.nl/app" href="http://www.citnetexplorer.nl/app/CitNetExplorer.jnlp">
+<information>
+  <title>VOSviewer</title>
+  <vendor>Nees Jan van Eck and Ludo Waltman</vendor>
+  <homepage href="http://www.citnetexplorer.nl"/>
+  <description>CitNetExplorer</description>
+  <icon href="http://www.citnetexplorer.nl/app/CitNetExplorer.png"/>
+  <offline-allowed/>
+</information>
+<security>
+  <all-permissions/>
+</security>
+<resources>
+  <j2se version="1.6+"/>
+  <jar href="CitNetExplorer.jar"/>
+</resources>
+<application-desc main-class="nl.citnetexplorer.app.CitNetExplorer"/>
+</jnlp>
