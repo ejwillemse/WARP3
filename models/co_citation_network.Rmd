@@ -1,0 +1,70 @@
+---
+title: "Science Mapping Analysis with bibliometrix R-package: CARP and GRP"
+author: Elias J. Willemse
+date: May 12, 2019
+output:
+  html_document:
+    toc: yes
+  html_notebook:
+    theme: lumen
+    toc: yes
+  prettydoc::html_pretty:
+    theme: hpstr
+    highlight: github
+---
+
+```{r include=FALSE}
+# Installation of some useful packages
+if(!isTRUE(require("prettydoc"))){install.packages("prettydoc")}
+if(!isTRUE(require("rio"))){install.packages("rio")}
+library(prettydoc)
+library(rio)
+library(tidyverse)
+```
+
+
+# Bibliographic Collection
+
+**Data source**:   Clarivate Analytics Web of Science (http://apps.webofknowledge.com)
+
+**Data format**:   Plaintext
+
+**Query**:         TO = "Capacitated Arc Routing" OR "Capacitated General Routing"
+
+**Timespan**:      2010-2019
+
+**Document Type**: Articles, letters, review and proceedings papers
+
+**Query data**:    12 May, 2019
+
+
+# Install and load bibliometrix R-package
+```{r load bibliometrix}
+# Stable version from CRAN (Comprehensive R Archive Network)
+# if you need to execute the code, remove # from the beginning of the next line
+
+# install.packages("bibliometrix")
+
+
+# Most updated version from GitHub
+# if you need to execute the code, remove # from the beginning of the next lines
+
+# install.packages("devtools")
+# devtools::install_github("massimoaria/bibliometrix")
+
+library(bibliometrix)
+
+#  biblioshiny() # for the shiny version
+```
+
+
+# Data loading, converting and writing
+```{r Data loading, warning=FALSE}
+# Loading txt or bib files into R environment
+D <- readFiles("../data/arp_grp_2010_2019_references.bib")
+
+# Converting the loaded files into a R bibliographic dataframe
+M <- convert2df(D, dbsource="isi",format="bibtex")
+M <- M %>% filter(PY >= 2010)
+write.csv(M, '../data/arp_grp_2010_2019_references_converted.bib', row.names = FALSE)
+```
