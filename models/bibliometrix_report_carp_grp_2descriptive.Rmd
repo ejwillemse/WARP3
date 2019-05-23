@@ -1,0 +1,84 @@
+---
+title: "Science Mapping Analysis with bibliometrix R-package: CARP and GRP"
+author: Elias J. Willemse
+date: May 12, 2019
+output:
+  html_document:
+    toc: yes
+  html_notebook:
+    theme: lumen
+    toc: yes
+  prettydoc::html_pretty:
+    theme: hpstr
+    highlight: github
+---
+
+```{r include=FALSE}
+# Installation of some useful packages
+if(!isTRUE(require("prettydoc"))){install.packages("prettydoc")}
+if(!isTRUE(require("rio"))){install.packages("rio")}
+library(prettydoc)
+library(rio)
+library(tidyverse)
+```
+
+
+# Bibliographic Collection
+
+**Data source**:   Clarivate Analytics Web of Science (http://apps.webofknowledge.com)
+
+**Data format**:   Plaintext
+
+**Query**:         TO = "Capacitated Arc Routing" OR "Capacitated General Routing"
+
+**Timespan**:      2010-2019
+
+**Document Type**: Articles, letters, review and proceedings papers
+
+**Query data**:    12 May, 2019
+
+
+# Install and load bibliometrix R-package
+```{r load bibliometrix}
+# Stable version from CRAN (Comprehensive R Archive Network)
+# if you need to execute the code, remove # from the beginning of the next line
+
+# install.packages("bibliometrix")
+
+
+# Most updated version from GitHub
+# if you need to execute the code, remove # from the beginning of the next lines
+
+# install.packages("devtools")
+# devtools::install_github("massimoaria/bibliometrix")
+
+library(bibliometrix)
+```
+
+
+# Data loading, converting and writing
+```{r Data loading, warning=FALSE}
+# Loading txt or bib files into R environment
+D <- readFiles("../data/arp_grp_2010_2019_references.bib")
+
+# Converting the loaded files into a R bibliographic dataframe
+M <- convert2df(D, dbsource="isi",format="bibtex")
+M <- M #%>% filter(PY >= 2010)
+
+```
+
+# Section 6: The social structure - Collaboration Analysis
+
+Collaboration networks show how authors, institutions (e.g. universities or departments) and countries relate to others in a specific field of research. For example, the first figure below is a co-author network. It discovers regular study groups, hidden groups of scholars, and pivotal authors. The second figure is called "Edu collaboration network" and uncovers relevant institutions in a specific research field and their relations.
+
+## Author collaboration network
+```{r, Au collaboration network, fig.height=10, fig.width=14}
+NetMatrix <- biblioNetwork(M, analysis = "collaboration",  network = "authors", sep = ";")
+net=networkPlot(NetMatrix,  n = 150, Title = "Author collaboration",type = "auto", size=10,size.cex=T,edgesize = 3,labelsize=0.8)
+```
+
+## Edu collaboration network
+```{r, Edu collaboration network, fig.height=10, fig.width=10}
+NetMatrix <- biblioNetwork(M, analysis = "collaboration",  network = "universities", sep = ";")
+net=networkPlot(NetMatrix,  n = 50, Title = "Edu collaboration",type = "auto", size=10,size.cex=T,edgesize = 3,labelsize=1)
+```

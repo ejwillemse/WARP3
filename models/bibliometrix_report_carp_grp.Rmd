@@ -19,6 +19,7 @@ if(!isTRUE(require("prettydoc"))){install.packages("prettydoc")}
 if(!isTRUE(require("rio"))){install.packages("rio")}
 library(prettydoc)
 library(rio)
+library(tidyverse)
 ```
 
 
@@ -62,9 +63,13 @@ D <- readFiles("../data/arp_grp_2010_2019_references.bib")
 
 # Converting the loaded files into a R bibliographic dataframe
 M <- convert2df(D, dbsource="isi",format="bibtex")
-M2 <- M
-M2
-write.csv(M2, '../data/arp_grp_2010_2019_references.csv')
+M <- M %>% filter(PY >= 2010)
+true_carps <- read.csv("../data/carp_yes_no.csv") %>% filter(CARP..Yes.No. == 1) %>% select(X)
+
+M_red <- M %>% semi_join(select(true_carps))
+#M2 <- M
+#M2
+#write.csv(M2, '../data/arp_grp_2010_2019_references.csv')
 ```
 
 ```{r}
@@ -140,14 +145,14 @@ thousands of authors contained in a collection of published scientific articles 
 * all other arguments assume the default values
 
 ```{r Co-citation network, comment=NA, fig.height=10, fig.width=10}
-NetMatrix <- biblioNetwork(M, analysis = "coupling", network = "references", sep = ";")
+NetMatrix <- biblioNetwork(M, analysis = "co-citation", network = "references", sep = ";")
 net=networkPlot(NetMatrix, n = 50, Title = "Citation Network", type = "fruchterman", size.cex=TRUE, size=20, remove.multiple=FALSE, labelsize=0.7,edgesize = 10, edges.min=5)
 ```
 
 Descriptive analysis of Article co-citation network characteristics
 ```{r Co-citation net stat, comment=NA}
-#netstat <- networkStat(NetMatrix)
-#summary(netstat,k=10)
+netstat <- networkStat(NetMatrix)
+summary(netstat,k=10)
 ```
 
 
