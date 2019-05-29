@@ -1,1 +1,2 @@
+library(bibliometrix)
 biblioshiny()

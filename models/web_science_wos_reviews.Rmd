@@ -26,7 +26,7 @@ The following results were obtained via web-of-science database searches, compar
 * `TOPIC: ("arc routing") Timespan: 2000-2009` returned 128 records compared against the 150 references of the review article (85% coverage).
 * `TOPIC: ("arc routing") Timespan: 2010-2017` returned 225 records compared against the 210 references of the review article (107% coverage).
 
-The extended searches return:
+The extended searches returned:
 
 * 230 records compared against the 128 references of the review article (180% coverage).
 * 321 records compared against the 225 references of the review article (143% coverage).
