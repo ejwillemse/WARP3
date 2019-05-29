@@ -1,12 +1,10 @@
 # WARP3: A review of CARP variants using network analysis
 
-## Work-in-prograsse
-
-The repository files are currently beeing better organised. Please visit it again on 4 June 2019.
-
-## Background
-
 The repository contains resources for my (intended) presentation at the [WARP3](http://warp3.unical.it/wp/), the 3rd International Workshop on Arc Routing Problems – Pizzo (Calabria, Italy) May 27-29, 2019.
+
+The actual presentation is available as `WillemseEJ_WARP3_28May2019.pdf` and `WillemseEJ_WARP3_28May2019.key` (Mac keynote version).
+
+The rest of the files are being reorganised, so please ignore them for now.
 
 Models developed for the presentation are available under [/models](https://github.com/ejwillemse/WARP3/models), data used under [/data](https://github.com/ejwillemse/WARP3/data), and resulting documents and presentations under [/docs](/docs).
 
