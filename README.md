@@ -1,5 +1,11 @@
 # WARP3: A review of CARP variants using network analysis
 
+## Work-in-prograsse
+
+The repository files are currently beeing better organised. Please visit it again on 4 June 2019.
+
+## Background
+
 The repository contains resources for my (intended) presentation at the [WARP3](http://warp3.unical.it/wp/), the 3rd International Workshop on Arc Routing Problems – Pizzo (Calabria, Italy) May 27-29, 2019.
 
 Models developed for the presentation are available under [/models](https://github.com/ejwillemse/WARP3/models), data used under [/data](https://github.com/ejwillemse/WARP3/data), and resulting documents and presentations under [/docs](/docs).
@@ -18,12 +24,3 @@ The main database searched is 'Web of Science Core Collection'. To check the cov
 
 * `TOPIC: ("arc routing") Timespan: 2000-2009` returned 128 records compared against the 149 references of the review article (85% coverage).
 * `TOPIC: ("arc routing") Timespan: 2010-2017` returned 225 records compared against the 210 references of the review article (107% coverage).
-
-
-
-
-
-* Extract article's and their citations from https://www.webofknowledge.com/ using 'Capaciated Arc Routing Problem' and 'Arc Routing Problem' as keyword search terms.
-* Build a direct citation network using http://www.citnetexplorer.nl/publications (description [here](http://www.citnetexplorer.nl/publications)) or http://www.vosviewer.com (description [here](http://www.vosviewer.com/publications)).
-* Analyse the citation network.
-* Construct auxilory networks by linking problem variants through their closeness, solution methods used and benchmark problems tested.
